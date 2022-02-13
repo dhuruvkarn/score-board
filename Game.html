@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Game</title>
+    <style>
+      body {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        justify-content: space-around;
+        font-weight: bold;
+        text-align: center;
+        align-self: center;
+      }
+      #inputs,
+      #data {
+        width: 35%;
+        height: 95vh;
+      }
+      #ttl {
+        display: inline-block;
+        min-width: 40%;
+        height: 8vh;
+        margin: auto;
+        font-size: 200%;
+        font-size: x-large;
+        border: 2px solid black;
+        background-color: rgb(179, 179, 179);
+      }
+      #store {
+        display: flex;
+        justify-content: space-between;
+        margin: 2% auto auto auto;
+        width: 70%;
+      }
+      #store > div {
+        min-width: 100px;
+      }
+      #min,
+      #max {
+        padding: 15% 0% 0%;
+        font-size: x-large;
+        height: 7vh;
+        border: 2px solid black;
+      }
+      #min {
+        background-color: rgb(254, 0, 0);
+      }
+      #max {
+        background-color: rgb(0, 170, 1);
+      }
+      #scr {
+        height: 8vh;
+        width: 40%;
+        margin: auto;
+        font-size: 200%;
+        border: 2px solid black;
+        background-color: rgb(179, 179, 179);
+      }
+      .onetonine {
+        display: grid;
+        height: 40%;
+        width: 40%;
+        margin: 1% auto 1%;
+        grid-gap: 1% 0%;
+        grid-template-columns: auto auto auto;
+      }
+      .onetonine > button {
+        height: 60%;
+        width: 60%;
+        font-size: 200%;
+        border: 2px solid black;
+        margin: auto;
+        background-color: rgb(102, 129, 0);
+      }
+
+      .onetonine :nth-child(even),
+      .onetonine :nth-child(5) {
+        background-color: rgb(255, 102, 0);
+      }
+      #inputs > div:nth-child(5) {
+        height: 6.5%;
+        width: 8%;
+        padding: 1% 0% 0%;
+        font-size: 200%;
+        border: 2px solid black;
+        color: white;
+        background-color: rgb(129, 0, 101);
+        margin: 1% auto;
+      }
+      button {
+        height: 7vh;
+        min-width: 40%;
+        font-size: 140%;
+        color: white;
+        background-color: black;
+        margin: 1% auto;
+      }
+      #scores {
+        height: 50%;
+      }
+      h2 ~ div {
+        font-size: 20px;
+        font-weight: normal;
+      }
+      @media (max-width: 1000px) {
+        #inputs,
+        #data {
+          width: 50%;
+          height: 100vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="inputs">
+      <div>
+        <div>TOTAL</div>
+        <div id="ttl">-</div>
+      </div>
+      <div id="store">
+        <div>
+          <div id="min">-</div>
+          <div>MIN</div>
+        </div>
+        <div>
+          <div id="max">-</div>
+          <div>MAX</div>
+        </div>
+      </div>
+      <div>
+        <div>SCORE</div>
+        <div id="scr">#</div>
+      </div>
+      <div class="onetonine">
+        <button onclick="Enter(1)">1</button>
+        <button onclick="Enter(2)">2</button>
+        <button onclick="Enter(3)">3</button>
+        <button onclick="Enter(4)">4</button>
+        <button onclick="Enter(5)">5</button>
+        <button onclick="Enter(6)">6</button>
+        <button onclick="Enter(7)">7</button>
+        <button onclick="Enter(8)">8</button>
+        <button onclick="Enter(9)">9</button>
+      </div>
+      <div onclick="Enter(0)">0</div>
+      <div><button onclick="Score()">Enter</button></div>
+    </div>
+    <div id="data">
+      <h2>GAMES SCORES</h2>
+      <div id="scores"></div>
+      <div><button onclick="rem_all()">REMOVE ALL</button></div>
+      <div><button onclick="rem_odd()">REMOVE ODD</button></div>
+      <div><button onclick="rem_even()">REMOVE EVEN</button></div>
+      <div><button onclick="rem_last()">REMOVE LAST</button></div>
+    </div>
+  </body>
+  <script>
+    var storage = [];
+    function Enter(num) {
+      var data = document.getElementById("scr");
+      if (data.textContent == "#") {
+        data.textContent = "";
+      }
+      var prev = data.textContent;
+      data.textContent = prev + num;
+    }
+
+    var g_scr = document.getElementById("scores");
+    var min = document.getElementById("min");
+    var max = document.getElementById("max");
+    var total = document.getElementById("ttl");
+
+    function Score() {
+      var min_num = min.textContent;
+      min_num = parseInt(min_num);
+
+      var max_num = max.textContent;
+      max_num = parseInt(max_num);
+      var data = document.getElementById("scr");
+      var new_num = data.textContent;
+      new_num = parseInt(new_num);
+
+      if (isNaN(min_num) && isNaN(max_num)) {
+        min.textContent = new_num;
+        max.textContent = new_num;
+        data.textContent = "#";
+
+        storage.push(new_num);
+        var a = document.createElement("div");
+        a.textContent = "Game " + 1 + " - " + new_num;
+        g_scr.append(a);
+
+        total.textContent = new_num;
+        return;
+      }
+      min.textContent = Math.min(min_num, new_num);
+      max.textContent = Math.max(max_num, new_num);
+      data.textContent = "#";
+
+      storage.push(new_num);
+      g_scr.textContent = "";
+      let sum = 0;
+      for (let i = 0; i < storage.length; i++) {
+        let a = document.createElement("div");
+        a.textContent = "Game " + (i + 1) + " - " + storage[i];
+        g_scr.append(a);
+        sum += storage[i];
+      }
+      total.textContent = sum;
+    }
+
+    function rem_all() {
+      storage = [];
+      g_scr.textContent = "";
+      total.textContent = "-";
+      min.textContent = "-";
+      max.textContent = "-";
+    }
+
+    function rem_odd() {
+      let odd_scr = [];
+      let sum = 0;
+      g_scr.textContent = "";
+      let j = 1;
+      let min_num = storage[0];
+      let max_num = storage[0];
+      for (let i = 1; i < storage.length; i += 2) {
+        odd_scr.push(storage[i]);
+        let a = document.createElement("div");
+        a.textContent = "Game " + j + " - " + storage[i];
+        g_scr.append(a);
+        sum += storage[i];
+        min.textContent = Math.min(min_num, storage[i]);
+        max.textContent = Math.max(max_num, storage[i]);
+        j++;
+      }
+      storage = odd_scr;
+      if (sum == 0) {
+        total.textContent = "-";
+        min.textContent = "-";
+        max.textContent = "-";
+        min_num;
+        return;
+      }
+
+      total.textContent = sum;
+    }
+
+    function rem_even() {
+      let even_scr = [];
+      let sum = 0;
+      g_scr.textContent = "";
+      let min_num = storage[0];
+      let max_num = storage[0];
+      let j = 1;
+      for (let i = 0; i < storage.length; i += 2) {
+        even_scr.push(storage[i]);
+        let a = document.createElement("div");
+        a.textContent = "Game " + j + " - " + storage[i];
+        g_scr.append(a);
+        sum += storage[i];
+        min.textContent = Math.min(min_num, storage[i]);
+        max.textContent = Math.max(max_num, storage[i]);
+        j++;
+      }
+      storage = even_scr;
+      if (sum == 0) {
+        total.textContent = "-";
+        min.textContent = "-";
+        max.textContent = "-";
+        return;
+      }
+      total.textContent = sum;
+    }
+
+    function rem_last() {
+      storage.pop();
+      let sum = 0;
+      g_scr.textContent = "";
+      let min_num = storage[0];
+      let max_num = storage[0];
+      for (let i = 0; i < storage.length; i++) {
+        let a = document.createElement("div");
+        a.textContent = "Game " + (i + 1) + " - " + storage[i];
+        g_scr.append(a);
+        sum += storage[i];
+        min.textContent = Math.min(min_num, storage[i]);
+        max.textContent = Math.max(max_num, storage[i]);
+      }
+      if (sum == 0) {
+        total.textContent = "-";
+        min.textContent = "-";
+        max.textContent = "-";
+        return;
+      }
+      total.textContent = sum;
+    }
+  </script>
+</html>
